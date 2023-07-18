@@ -1,5 +1,7 @@
-import * as React from "react";
 import { Routes, Route, Outlet, Link } from "react-router-dom";
+import { getJoke } from "./requests/getJoke";
+import { getBoredActivity } from "./requests/getBoredActivity";
+import { useState } from "react";
 
 //going to separate the routes to different files and call a different api from each one to practice
 //used this example for react router code: https://github.com/remix-run/react-router/tree/dev/examples/basic
@@ -10,8 +12,8 @@ export default function App() {
 
       <p>
         This example demonstrates some of the core features of React Router
-        including nested and using a route (aka splat route) to render a not found page when someone
-        visits an unrecognized URL.
+        including nested and using a route (aka splat route) to render a not
+        found page when someone visits an unrecognized URL.
       </p>
 
       {/* Routes nest inside one another. Nested route paths build upon
@@ -20,9 +22,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
+          <Route path="joke" element={<Joke />} />
           <Route path="dashboard" element={<Dashboard />} />
-
+          <Route path="bored" element={<Bored />} />
           {/* Using path="*"" means "match anything", so this route
                 acts like a catch-all for URLs that we don't have explicit
                 routes for. */}
@@ -44,7 +46,10 @@ function Layout() {
             <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to="/about">About</Link>
+            <Link to="/joke">Joke</Link>
+          </li>
+          <li>
+            <Link to="/bored">Bored</Link>
           </li>
           <li>
             <Link to="/dashboard">Dashboard</Link>
@@ -73,10 +78,27 @@ function Home() {
   );
 }
 
-function About() {
+function Joke() {
+  const [joke, setJoke] = useState("Joke pending");
+  joke == "Joke pending"
+    ? getJoke().then((response) => setJoke(response))
+    : console.log(joke);
+
   return (
     <div>
-      <h2>About</h2>
+      <h2>{joke}</h2>
+    </div>
+  );
+}
+
+function Bored() {
+  const [bored, setBored] = useState("Boredom cure pending...");
+  bored == "Boredom cure pending..."
+    ? getBoredActivity().then((response) => setBored(response))
+    : console.log(bored);
+  return (
+    <div>
+      <h2>{bored}</h2>
     </div>
   );
 }
